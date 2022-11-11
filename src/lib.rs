@@ -115,12 +115,14 @@ pub fn search_case_insensitive<'a>(
 pub fn help() {
     println!("Help menu:");
     println!(
-        "Mini Grep will search for a string in a file and return all lines that have the string."
+        "Mini Grep will search for a string in a list of files and return all lines that have the string."
     );
     println!(
         "To use type 'minigrep <string-to-search> <*optional*-case_sensitive> <file-to-search-in>'"
     );
-    println!("You do not need to provide a value for the case-sensitive argument. By default the search is not case sensitive. Add the number 1 after the search term.");
+    println!("
+    You do not need to provide a value for the case-sensitive argument. By default the search is not case sensitive. \nAdd the number 1 after the search term to make the query cas sensitive."
+    );
     println!("Usage example: 'mini_grep hello poem.txt, poem2.txt'");
     println!("Make sure that the file passed in has valid UTF-8 characters and exist in the current directory.");
     println!("For help again, type 'mini-grep help'");
