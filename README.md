@@ -5,8 +5,7 @@ It is made completely in rust.
 
 ### Usage
 If you would like this program, you will have to download then compile ths source code then compile it your self. 
-For better use add the binary created to the PATH variable.
-
+For better use add the binary created to the PATH variable. I might add a release later but for now you will have to download the source code.
 
 Mini Grep will search for a string in a list of files and return all lines that have the string.
 
