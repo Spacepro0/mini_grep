@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::env;
 use std::error::Error;
 use std::fs;
 
@@ -40,34 +41,36 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new(args: &mut Vec<String>) -> Result<Config, &str> {
-        if args.len() < 3 {
-            if args.len() == 2 {
-                if args[1].to_lowercase() == "help" {
+    pub fn new(mut args: env::Args) -> Result<Config, &'static str> {
+        args.next();
+        
+        let mut query = String::new();
+        match args.next() {
+            Some(arg) => {
+                if arg == String::from("help") {
                     help();
+                } else {
+                    query = arg;
                 }
-            }
-            return Err("Not enough arguments");
+            },
+            None => return Err("Didn't get a query string")
         }
-
-        // use an environment variable to determin the case sensitivity if the variable is set
-
-        let mut case_sensitive = false;
-        if args[2] == String::from("1") {
-            case_sensitive = true;
-            args.remove(2);
-        }
-
-        // use the first argument as the string to search for
-        // uses clone to duplicate the variable without taking ownership
-        let query = args[1].clone();
 
         let mut file_list: Vec<String> = Vec::new();
+        let mut case_sensitive = false;
+        match args.next() {
+            Some(arg) => {
+                if arg == String::from("1") {
+                    case_sensitive = true;
+                } else {
+                    file_list.push(arg)
+                }
+            },
+            None => return Err("Didn't get any file names")
+        }
 
-        for arg in args.clone() {
-            if !(arg == args[0] || arg == args[1]) {
-                file_list.push(arg.clone());
-            }
+        for arg in args {
+            file_list.push(arg);
         }
 
         Ok(Config {
@@ -113,15 +116,15 @@ pub fn search_case_insensitive<'a>(
 }
 
 pub fn help() {
-    println!("Help menu:");
+    println!("Help menu:\n");
     println!(
         "Mini Grep will search for a string in a list of files and return all lines that have the string."
     );
     println!(
         "To use type 'minigrep <string-to-search> <*optional*-case_sensitive> <file-to-search-in>'"
     );
-    println!("
-    You do not need to provide a value for the case-sensitive argument. By default the search is not case sensitive. \nAdd the number 1 after the search term to make the query cas sensitive."
+    println!(
+        "You do not need to provide a value for the case-sensitive argument. By default the search is not case sensitive. \nAdd the number 1 after the search term to make the query cas sensitive."
     );
     println!("Usage example: 'mini_grep hello poem.txt, poem2.txt'");
     println!("Make sure that the file passed in has valid UTF-8 characters and exist in the current directory.");
